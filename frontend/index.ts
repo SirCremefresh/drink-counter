@@ -2,7 +2,15 @@ const Web3 = require('web3');
 const TruffleContract = require('@truffle/contract');
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 
+// @ts-ignore
+import QrScanner from 'qr-scanner';
 import simpleCounterArtifact from '../contracts-out/SimpleCounter.json';
+
+console.log(QrScanner)
+
+const video = document.getElementById('qr-video');
+
+console.log(video);
 
 let provider;
 if (process.env.NODE_ENV === 'dev') {
@@ -19,7 +27,25 @@ SimpleCounter.setProvider(web3.currentProvider);
     const simpleCounter = await SimpleCounter.deployed();
     (<any>window).simpleCounter = simpleCounter;
     // await simpleCounter.count(web3.utils.fromUtf8("t3"), {from: '0x8D094820dde30B96C3bA3e77AE8A83c6b2eBe474'})
-    // await simpleCounter.increment(web3.utils.fromUtf8("t3"), {from: '0x8D094820dde30B96C3bA3e77AE8A83c6b2eBe474'})
+    // await simpleCounter.increment(web3.utils.fromUtf8("t3"), {from: '0x8D094820dde30B96C3bA3e77AE8A83c6b2eBe474'}
+
+    const scanner = new QrScanner(video, result => {
+        if (result) {
+            const barId = parseInt(result.substring(0, 1));
+            if (barId >= 0 && barId <= 6) {
+
+                scanner.destroy();
+            }
+        }
+
+    });
+    scanner._qrWorker = new Worker('../node_modules/qr-scanner/qr-scanner-worker.min.js');
+
+    (<any>window).worker = scanner._qrWorker;
+
+    await scanner.start();
+
+
 })();
 
 (<any>window).web3 = web3;
