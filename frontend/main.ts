@@ -1,4 +1,4 @@
-import html from './register.html';
+import registerHtml from './register.html';
 // @ts-ignore
 import QrScanner from 'qr-scanner';
 import simpleCounterArtifact from '../contracts-out/SimpleCounter.json';
@@ -7,14 +7,9 @@ const Web3 = require('web3');
 const TruffleContract = require('@truffle/contract');
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 
-
-console.log(html);
-
-console.log(QrScanner)
-
 const video = document.getElementById('qr-video');
-
-console.log(video);
+var register = document.getElementById('register');
+register.innerHTML = registerHtml;
 
 let provider;
 if (process.env.NODE_ENV === 'dev') {
