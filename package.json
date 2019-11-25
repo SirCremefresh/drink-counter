@@ -1,0 +1,23 @@
+{
+  "name": "koa-trufflebox",
+  "version": "0.0.1",
+  "description": "",
+  "main": "app/index.js",
+  "scripts": {
+    "start": "node app/index.js",
+    "test": "truffle test test/*"
+  },
+  "keywords": [],
+  "author": "Manjeet Thadani <manjeet.thadani@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@truffle/contract": "^4.1.0",
+    "@truffle/hdwallet-provider": "^1.0.25",
+    "truffle": "^5.1.1",
+    "web3": "1.2.1"
+  },
+  "devDependencies": {
+    "@openzeppelin/contracts": "^2.4.0",
+    "dotenv": "^8.2.0"
+  }
+}
