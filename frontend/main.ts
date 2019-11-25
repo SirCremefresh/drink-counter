@@ -1,10 +1,14 @@
+import html from './register.html';
+// @ts-ignore
+import QrScanner from 'qr-scanner';
+import simpleCounterArtifact from '../contracts-out/SimpleCounter.json';
+
 const Web3 = require('web3');
 const TruffleContract = require('@truffle/contract');
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 
-// @ts-ignore
-import QrScanner from 'qr-scanner';
-import simpleCounterArtifact from '../contracts-out/SimpleCounter.json';
+
+console.log(html);
 
 console.log(QrScanner)
 
