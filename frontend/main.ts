@@ -12,6 +12,12 @@ const video = document.getElementById('qr-video');
 // var register = document.getElementById('register');
 // register.innerHTML = registerHtml;
 
+console.info('Starting application with parameters: ', {
+    NODE_ENV: process.env.NODE_ENV,
+    HTTP_ENDPOINT: process.env.HTTP_ENDPOINT,
+    PUBLIC_ADDRESS: process.env.PUBLIC_ADDRESS
+});
+
 let provider;
 if (process.env.NODE_ENV === 'dev') {
     provider = new Web3.providers.HttpProvider(process.env.HTTP_ENDPOINT);
@@ -60,11 +66,11 @@ SimpleCounter.setProvider(web3.currentProvider);
             const usernameInput = <HTMLInputElement>document.querySelector("[data-el=register-username-input]");
             const registerButton = document.querySelector("[data-el=register-button]");
 
-            registerButton.addEventListener('click', async() => {
+            registerButton.addEventListener('click', async () => {
                 const username = usernameInput.value;
                 const pwd = 'abcdefghijk';
                 localStorage.setItem("PWD", `${pwd}`);
-                    await simpleCounter.register(web3.utils.fromUtf8(username), web3.utils.keccak256(pwd), {from: process.env.PUBLIC_ADDRESS})
+                await simpleCounter.register(web3.utils.fromUtf8(username), web3.utils.keccak256(pwd), {from: process.env.PUBLIC_ADDRESS})
 
             });
         } else if (page === 'SCAN') {
