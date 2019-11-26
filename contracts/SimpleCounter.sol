@@ -7,12 +7,12 @@ contract SimpleCounter {
     mapping(bytes32 => uint16[7]) public score;
 
     modifier usernameExists(bytes32 username) {
-        require(registeredUsers[username]);
+        require(registeredUsers[username], "the username does not exist");
         _;
     }
 
-    modifier checkPassword(bytes32 username, bytes32 pwd) {
-        require(userPwdHash[username] == keccak256(abi.encodePacked(pwd)));
+    modifier checkPassword(bytes32 username, bytes memory pwd) {
+        require(userPwdHash[username] == keccak256(pwd), "The pwd does not match");
         _;
     }
 
@@ -33,7 +33,7 @@ contract SimpleCounter {
     function increment(
         bytes32 username,
         uint16 barId,
-        bytes32 pwd,
+        bytes calldata pwd,
         bytes32 pwdHash
     )
     usernameExists(username)

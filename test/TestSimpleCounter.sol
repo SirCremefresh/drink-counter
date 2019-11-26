@@ -11,8 +11,8 @@ contract TestSimpleCounter {
         SimpleCounter simpleCounter = SimpleCounter(DeployedAddresses.SimpleCounter());
 
         bytes32 username = "pauler";
-        bytes32 pwd = "pwd";
-        bytes32 pwdHash = keccak256(abi.encodePacked(pwd));
+        bytes memory pwd = "pwd";
+        bytes32 pwdHash = keccak256(pwd);
 
         simpleCounter.register(username, pwdHash);
 
@@ -24,9 +24,9 @@ contract TestSimpleCounter {
         SimpleCounter simpleCounter = SimpleCounter(DeployedAddresses.SimpleCounter());
 
         bytes32 username = "pauler2";
-        bytes32 pwd = "pwd";
-        bytes32 pwd2 = "pwd2";
-        bytes32 pwdHash2 = keccak256(abi.encodePacked(pwd2));
+        bytes memory pwd = "pwd";
+        bytes memory pwd2 = "pwd2";
+        bytes32 pwdHash2 = keccak256(pwd2);
         registerUser(username, pwd);
         uint16 barIdToIncrement = 1;
         uint16 barIdNotIncrement = 0;
@@ -47,7 +47,7 @@ contract TestSimpleCounter {
         SimpleCounter simpleCounter = SimpleCounter(DeployedAddresses.SimpleCounter());
 
         bytes32 username = "pauler3";
-        bytes32 pwd = "pwd";
+        bytes memory pwd = "pwd";
         registerUser(username, pwd);
         uint16 barId = 1;
 
@@ -59,17 +59,17 @@ contract TestSimpleCounter {
         SimpleCounter simpleCounter = SimpleCounter(DeployedAddresses.SimpleCounter());
 
         bytes32 username = "pauler4";
-        bytes32 pwd1 = "pwd1";
+        bytes memory pwd1 = "pwd1";
         registerUser(username, pwd1);
 
-        bytes32 pwd2 = "pwd2";
-        bytes32 pwdHash2 = keccak256(abi.encodePacked(pwd2));
+        bytes memory pwd2 = "pwd2";
+        bytes32 pwdHash2 = keccak256(pwd2);
 
-        bytes32 pwd3 = "pwd3";
-        bytes32 pwdHash3 = keccak256(abi.encodePacked(pwd3));
+        bytes memory pwd3 = "pwd3";
+        bytes32 pwdHash3 = keccak256(pwd3);
 
-        bytes32 pwd4 = "pwd4";
-        bytes32 pwdHash4 = keccak256(abi.encodePacked(pwd4));
+        bytes memory pwd4 = "pwd4";
+        bytes32 pwdHash4 = keccak256(pwd4);
 
 
         simpleCounter.increment(
@@ -99,10 +99,10 @@ contract TestSimpleCounter {
         AssertUint.equal(simpleCounter.userScore(username), 3, "entire score should also be incremented");
     }
 
-    function registerUser(bytes32 username, bytes32 pwd) private returns (bytes32 pwdHash) {
+    function registerUser(bytes32 username, bytes memory pwd) private returns (bytes32 pwdHash) {
         SimpleCounter simpleCounter = SimpleCounter(DeployedAddresses.SimpleCounter());
 
-        pwdHash = keccak256(abi.encodePacked(pwd));
+        pwdHash = keccak256(pwd);
         simpleCounter.register(username, pwdHash);
     }
 }
