@@ -2,16 +2,15 @@ import registerHtml from './register.html';
 import scanHtml from './scan.html';
 import rankingHtml from './ranking.html';
 // @ts-ignore
-import QrScanner from 'qr-scanner';
-const uuid = require('uuid/v4');
 import simpleCounterArtifact from '../contracts-out/SimpleCounter.json';
+
+const uuid = require('uuid/v4');
+const jsQR = require('jsqr');
 
 
 const Web3 = require('web3');
 const TruffleContract = require('@truffle/contract');
 const HDWalletProvider = require("@truffle/hdwallet-provider");
-// var register = document.getElementById('register');
-// register.innerHTML = registerHtml;
 
 console.info('Starting application with parameters: ', {
     NODE_ENV: process.env.NODE_ENV,
@@ -58,39 +57,58 @@ SimpleCounter.setProvider(web3.currentProvider);
                 const username = usernameInput.value;
                 const pwd = uuid();
                 await simpleCounter.register(
-                        web3.utils.fromUtf8(username),
-                        web3.utils.keccak256(pwd),
-                        {from: process.env.PUBLIC_ADDRESS}
-                    );
+                    web3.utils.fromUtf8(username),
+                    web3.utils.keccak256(pwd),
+                    {from: process.env.PUBLIC_ADDRESS}
+                );
                 localStorage.setItem("USERNAME", `${username}`);
                 localStorage.setItem("PWD", `${pwd}`);
                 await showPage('SCAN');
             });
         } else if (page === 'SCAN') {
             rootEl.innerHTML = scanHtml;
-            const video = document.getElementById('qr-video');
+            var video = document.createElement('video');
+            var canvasElement = <HTMLCanvasElement>document.getElementById("canvas");
+            var canvas = canvasElement.getContext("2d");
 
-            const scanner = new QrScanner(video, result => {
-                if (result) {
-                    const barId = parseInt(result.substring(0, 1));
-                    if (barId >= 0 && barId <= 6) {
-                        scanner.destroy();
-                        let newPwd = uuid();
-                        /*
-                        simpleCounter.increment(
-                                web3.utils.fromUtf8(localStorage.getItem("USERNAME")),
-                                barId,
-                                web3.utils.fromUtf8(localStorage.getItem("PWD")),
-                                web3.utils.keccak256(newPwd)
-                            );
-                        localStorage.setItem("PWD", `${newPwd}`);
-                         */
+            navigator.mediaDevices.getUserMedia({video: {facingMode: "environment"}}).then(function (stream) {
+                video.srcObject = stream;
+                video.setAttribute("playsinline", 'true'); // required to tell iOS safari we don't want fullscreen
+                video.play();
+                requestAnimationFrame(tick);
+            });
+
+            function tick() {
+                if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                    canvasElement.hidden = false;
+
+                    canvasElement.height = video.videoHeight;
+                    canvasElement.width = video.videoWidth;
+                    canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+                    var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+                    var code = jsQR(imageData.data, imageData.width, imageData.height, {
+                        inversionAttempts: "dontInvert",
+                    });
+                    if (code) {
+                        let barId = parseInt(code.data.substring(0, 1));
+                        if (barId >= 0 && barId <= 6) {
+                            /*
+                                                simpleCounter.increment(
+                                                        web3.utils.fromUtf8(localStorage.getItem("USERNAME")),
+                                                        barId,
+                                                        web3.utils.fromUtf8(localStorage.getItem("PWD")),
+                                                        web3.utils.keccak256(newPwd)
+                                                    );
+                                                localStorage.setItem("PWD", `${newPwd}`);
+                                            */
+                            showPage('RANKING');
+                        }
                     }
                 }
-            });
-            scanner._qrWorker = new Worker('../node_modules/qr-scanner/qr-scanner-worker.min.js');
+                requestAnimationFrame(tick);
+            }
 
-            await scanner.start();
+
         } else if (page === 'RANKING') {
             rootEl.innerHTML = rankingHtml;
         }

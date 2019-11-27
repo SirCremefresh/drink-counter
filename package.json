@@ -15,8 +15,8 @@
     "@truffle/contract": "^4.1.1",
     "@truffle/hdwallet-provider": "^1.0.25",
     "bulma": "^0.8.0",
+    "jsqr": "^1.2.0",
     "parcel-bundler": "^1.12.4",
-    "qr-scanner": "^1.1.1",
     "truffle": "^5.1.1",
     "uuid": "^3.3.3",
     "web3": "1.2.4"
