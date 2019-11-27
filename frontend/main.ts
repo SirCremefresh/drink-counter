@@ -36,7 +36,7 @@ SimpleCounter.setProvider(web3.currentProvider);
     // await simpleCounter.count(web3.utils.fromUtf8("t3"), {from: '0x8D094820dde30B96C3bA3e77AE8A83c6b2eBe474'})
     // await simpleCounter.increment(web3.utils.fromUtf8("t3"), {from: '0x8D094820dde30B96C3bA3e77AE8A83c6b2eBe474'}
     //
-    // (<any>window).web3 = web3;
+    (<any>window).web3 = web3;
 
     const rootEl = document.getElementById("root");
 

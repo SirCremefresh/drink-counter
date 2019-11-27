@@ -1,10 +1,16 @@
-pragma solidity ^0.5.0;
+pragma solidity ^0.5.12;
+pragma experimental ABIEncoderV2;
 
 contract SimpleCounter {
     bytes32[] public usernames;
     mapping(bytes32 => bytes32) public userPwdHash;
     mapping(bytes32 => bool) public registeredUsers;
     mapping(bytes32 => uint16[7]) public score;
+
+    struct UserDate {
+        bytes32 username;
+        uint16 score;
+    }
 
     modifier usernameExists(bytes32 username) {
         require(registeredUsers[username], "the username does not exist");
@@ -48,5 +54,16 @@ contract SimpleCounter {
     function userScore(bytes32 username) usernameExists(username) view external returns (uint16) {
         uint16[7] storage userScores = score[username];
         return userScores[0] + userScores[1] + userScores[2] + userScores[3] + userScores[4] + userScores[5] + userScores[6];
+    }
+
+    function getAllUsers() public view returns (UserDate[] memory) {
+        UserDate[] memory result = new UserDate[](usernames.length);
+
+        for (uint i = 0; i < usernames.length; i++) {
+            uint16[7] storage userScores = score[usernames[i]];
+            result[i] = UserDate(usernames[i], userScores[0] + userScores[1] + userScores[2] + userScores[3] + userScores[4] + userScores[5] + userScores[6]);
+        }
+
+        return result;
     }
 }
