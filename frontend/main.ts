@@ -47,6 +47,7 @@ SimpleCounter.setProvider(web3.currentProvider);
 
 
     async function showPage(page: 'REGISTER' | 'SCAN' | 'RANKING') {
+        let animationId;
         if (page === 'REGISTER') {
             rootEl.innerHTML = registerHtml;
 
@@ -75,7 +76,7 @@ SimpleCounter.setProvider(web3.currentProvider);
                 video.srcObject = stream;
                 video.setAttribute("playsinline", 'true'); // required to tell iOS safari we don't want fullscreen
                 video.play();
-                requestAnimationFrame(tick);
+                animationId = requestAnimationFrame(tick);
             });
 
             function tick() {
@@ -92,20 +93,26 @@ SimpleCounter.setProvider(web3.currentProvider);
                     if (code) {
                         let barId = parseInt(code.data.substring(0, 1));
                         if (barId >= 0 && barId <= 6) {
-                            /*
-                                                simpleCounter.increment(
-                                                        web3.utils.fromUtf8(localStorage.getItem("USERNAME")),
-                                                        barId,
-                                                        web3.utils.fromUtf8(localStorage.getItem("PWD")),
-                                                        web3.utils.keccak256(newPwd)
-                                                    );
-                                                localStorage.setItem("PWD", `${newPwd}`);
-                                            */
+                            let newPwd = uuid();
+                            simpleCounter.increment(
+                                web3.utils.fromUtf8(localStorage.getItem("USERNAME")),
+                                barId,
+                                web3.utils.fromUtf8(localStorage.getItem("PWD")),
+                                web3.utils.keccak256(newPwd),
+                                {from: process.env.PUBLIC_ADDRESS}
+                            );
+                            localStorage.setItem("PWD", `${newPwd}`);
+                            cancelAnimationFrame(animationId);
                             showPage('RANKING');
+                        } else {
+                            animationId = requestAnimationFrame(tick);
                         }
+                    } else {
+                        animationId = requestAnimationFrame(tick);
                     }
+                } else {
+                    animationId = requestAnimationFrame(tick);
                 }
-                requestAnimationFrame(tick);
             }
 
 
