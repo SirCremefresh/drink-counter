@@ -103,6 +103,9 @@ SimpleCounter.setProvider(web3.currentProvider);
                             );
                             localStorage.setItem("PWD", `${newPwd}`);
                             cancelAnimationFrame(animationId);
+                            (<MediaStream>video.srcObject).getTracks().forEach(function(track) {
+                                track.stop();
+                            });
                             showPage('RANKING');
                         } else {
                             animationId = requestAnimationFrame(tick);
