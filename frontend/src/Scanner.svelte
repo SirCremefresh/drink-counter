@@ -8,14 +8,23 @@
 
     const video = document.createElement('video');
 
-    navigator.mediaDevices.getUserMedia({video: {facingMode: "environment"}}).then(function (stream) {
-        ctx = canvas.getContext("2d");
+    setTimeout(() => {
+        navigator.mediaDevices.getUserMedia({
+            video: {
+                width: innerWidth,
+                height: height,
+                facingMode: "environment"
+            }
+        }).then(function (stream) {
+            ctx = canvas.getContext("2d");
 
-        video.srcObject = stream;
-        video.setAttribute("playsinline", 'true'); // required to tell iOS safari we don't want fullscreen
-        video.play();
-        requestAnimationFrame(tick);
-    });
+            video.srcObject = stream;
+            video.setAttribute("playsinline", 'true'); // required to tell iOS safari we don't want fullscreen
+            video.play();
+            requestAnimationFrame(tick);
+        });
+    }, 10);
+
 
     function tick() {
         if (video.readyState === video.HAVE_ENOUGH_DATA) {
@@ -23,7 +32,8 @@
 
             canvas.height = height;
             canvas.width = innerWidth;
-            ctx.drawImage(video, (video.width - innerWidth) / 2, 0);
+            // ctx.drawImage(video, (video.width - innerWidth) / 2, 0);
+            ctx.drawImage(video, 0, 0);
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             const code = jsQR(imageData.data, imageData.width, imageData.height, {
                 inversionAttempts: "dontInvert",
