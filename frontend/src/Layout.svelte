@@ -16,7 +16,7 @@
         <h1 class="title has-text-centered layout-title">DRINK COUNTER</h1>
     </div>
 
-    <div class="app-content">
+    <div class="app-content scroll-content">
         <slot></slot>
     </div>
     <div class="tabs">
@@ -90,5 +90,9 @@
 
     .layout-title {
         margin-top: 10px;
+    }
+
+    .scroll-content {
+        overflow: scroll;
     }
 </style>
