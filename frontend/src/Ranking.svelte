@@ -4,7 +4,7 @@
 </script>
 
 <main>
-    <h2 class="subtitle has-text-centered">Ranking</h2>
+    <h2 class="subtitle has-text-centered ranking-subtitle">Ranking</h2>
     <table class="table is-fullwidth is-striped">
         <thead>
         <tr>
@@ -25,4 +25,8 @@
     </table>
 </main>
 <style>
+    .ranking-subtitle {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
 </style>

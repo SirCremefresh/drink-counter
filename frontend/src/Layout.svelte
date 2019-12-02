@@ -12,7 +12,10 @@
 </script>
 
 <div class="container">
-    <h1 class="title">DRINK COUNTER</h1>
+    <div class="layout-header">
+        <h1 class="title has-text-centered layout-title">DRINK COUNTER</h1>
+    </div>
+
     <div class="app-content">
         <slot></slot>
     </div>
@@ -79,5 +82,13 @@
 
         height: calc(100% - 10px);
         width: auto;
+    }
+
+    .layout-header {
+        background-color: #00d1b2;
+    }
+
+    .layout-title {
+        margin-top: 10px;
     }
 </style>

@@ -20,6 +20,7 @@
                 facingMode: "environment"
             }
         }).then(function (stream) {
+            if (stopTick) return;
             ctx = canvas.getContext("2d");
 
             video.srcObject = stream;
@@ -40,7 +41,7 @@
             ctx.fillStyle = "black";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             // ctx.drawImage(video, (video.width - innerWidth) / 2, 0);
-            ctx.drawImage(video, 0, 0);
+            ctx.drawImage(video, 0, (canvas.height - video.videoHeight) / 2);
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             const code = jsQR(imageData.data, imageData.width, imageData.height, {
                 inversionAttempts: "dontInvert",
@@ -69,6 +70,7 @@
     }
 
     function stopCamera() {
+        if (!video.srcObject) return;
         video.srcObject.getTracks().forEach(function (track) {
             track.stop();
         });
