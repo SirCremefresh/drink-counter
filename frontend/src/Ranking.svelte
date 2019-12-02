@@ -4,7 +4,7 @@
     let player = {name: "you", rank:"2alcoholic"};
 </script>
 
-<main class="scroll-content">
+<main>
     <h2 class="subtitle has-text-centered ranking-subtitle">Ranking</h2>
     <label class="label margin-left">You're Score:</label>
     <table class="table is-fullwidth is-striped">
@@ -52,10 +52,5 @@
 
     .margin-left {
         margin-left: 5px;
-    }
-
-    .scroll-content {
-        overflow-y: scroll;
-        height: calc(100vh - 110px);
     }
 </style>
