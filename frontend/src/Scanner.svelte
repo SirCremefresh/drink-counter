@@ -9,6 +9,8 @@
     const video = document.createElement('video');
 
     setTimeout(() => {
+        console.log({innerWidth, height});
+
         navigator.mediaDevices.getUserMedia({
             video: {
                 width: innerWidth,
@@ -23,7 +25,7 @@
             video.play();
             requestAnimationFrame(tick);
         });
-    }, 10);
+    }, 1000);
 
 
     function tick() {
@@ -66,7 +68,7 @@
 </script>
 
 <svelte:window bind:innerWidth={innerWidth}/>
-<h2 class="subtitle has-text-centered rainbow rainbow_text_animated">Scan a QR-Code</h2>
+<h2 class="subtitle has-text-centered rainbow rainbow_text_animated">{height} / {innerWidth}</h2>
 
 <main bind:clientHeight={height}>
     <canvas
