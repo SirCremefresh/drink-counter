@@ -7,7 +7,7 @@
     import Ranking from "./Ranking.svelte";
     import Layout from "./Layout.svelte";
 
-    let route = 'SCANNER';
+    let route = 'RANKING';
 
     const showRoute = (newRoute) => {
         console.log(`change route to ${newRoute}`);
