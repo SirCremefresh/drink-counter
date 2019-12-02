@@ -3,8 +3,10 @@
 
     import jsQR from "jsqr";
     import uuid from "uuid/v4";
+    import {onDestroy} from 'svelte';
 
-    let canvas, ctx, innerWidth, height;
+
+    let canvas, ctx, innerWidth, height, stopTick = false;
 
     const video = document.createElement('video');
 
@@ -29,6 +31,7 @@
 
 
     function tick() {
+        if (stopTick) return;
         if (video.readyState === video.HAVE_ENOUGH_DATA) {
             canvas.hidden = false;
 
@@ -52,9 +55,7 @@
                     //         {from: process.env.PUBLIC_ADDRESS}
                     // );
                     // localStorage.setItem("PWD", `${newPwd}`);
-                    video.srcObject.getTracks().forEach(function (track) {
-                        track.stop();
-                    });
+                    stopCamera();
                     showRoute('RANKING');
                     return;
                 } else {
@@ -65,6 +66,16 @@
         requestAnimationFrame(tick);
     }
 
+    function stopCamera() {
+        video.srcObject.getTracks().forEach(function (track) {
+            track.stop();
+        });
+    }
+
+    onDestroy(() => {
+        stopTick = true;
+        stopCamera();
+    });
 </script>
 
 <svelte:window bind:innerWidth={innerWidth}/>
