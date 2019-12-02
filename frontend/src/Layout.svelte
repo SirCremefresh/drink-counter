@@ -94,5 +94,6 @@
 
     .scroll-content {
         overflow: scroll;
+        -webkit-overflow-scrolling: touch;
     }
 </style>
