@@ -1,5 +1,10 @@
 <script>
+    import {etherService} from './ether.service'
     export let showRoute;
+
+    etherService.getUsers();
+
+
     let ranking = [{name: "hans", drinks: 5}, {name: "don", drinks: 3}, {name: "globi", drinks: 1},{name: "hans", drinks: 5}, {name: "don", drinks: 3}, {name: "globi", drinks: 1},{name: "hans", drinks: 5}, {name: "don", drinks: 3}, {name: "globi", drinks: 1},{name: "hans", drinks: 5}, {name: "don", drinks: 3}, {name: "globi", drinks: 1},{name: "hans", drinks: 5}, {name: "don", drinks: 3}, {name: "globi", drinks: 1},{name: "hans", drinks: 5}, {name: "don", drinks: 3}, {name: "globi", drinks: 1},{name: "hans", drinks: 5}, {name: "don", drinks: 3}, {name: "globi", drinks: 1},{name: "hans", drinks: 5}, {name: "don", drinks: 3}, {name: "globi", drinks: 1},{name: "hans", drinks: 5}, {name: "don", drinks: 3}, {name: "globi", drinks: 1},{name: "hans", drinks: 5}, {name: "don", drinks: 3}, {name: "globi", drinks: 1}];
     let player = {name: "you", rank:"2alcoholic"};
 </script>

@@ -1,5 +1,10 @@
 <script>
     export let showRoute;
+
+    function register() {
+
+    }
+
 </script>
 
 <main>
@@ -11,14 +16,14 @@
                 <div class="control has-icons-left has-icons-right">
                     <input class="input" placeholder="bert" data-el="register-username-input" type="text">
                     <span class="icon is-small is-left">
-                    <i class="fas fa-user"></i>
+                    <i class="ion-md-person"></i>
                 </span>
                 </div>
                 <p class="help is-danger is-hidden">This username is taken</p>
             </div>
             <div class="field">
                 <div class="control">
-                    <button class="button is-primary is-rounded is-fullwidth" data-el="register-button">Register
+                    <button class="button is-primary is-rounded is-fullwidth" on:click={register} data-el="register-button">Register
                     </button>
                 </div>
             </div>
