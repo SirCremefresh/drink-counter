@@ -37,6 +37,8 @@
 
             canvas.height = height;
             canvas.width = innerWidth;
+            ctx.fillStyle = "black";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
             // ctx.drawImage(video, (video.width - innerWidth) / 2, 0);
             ctx.drawImage(video, 0, 0);
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -91,6 +93,7 @@
 <style>
     main {
         height: calc(100% - 25px);
+        background: black;
     }
 
     .subtitle {
