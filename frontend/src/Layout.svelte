@@ -94,5 +94,7 @@
 
     .scroll-content {
         overflow: scroll;
+        -webkit-overflow-scroll: touch;
+        position: fixed;
     }
 </style>
