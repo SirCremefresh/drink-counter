@@ -227,7 +227,7 @@ class EtherService {
         const provider = new ethers.providers.InfuraProvider('ropsten', 'b0699ff0c673456ea963164da0ab26dc');
         mnemonicWallet = ethers.Wallet.fromMnemonic(MNEMONIC).connect(provider);
 
-        this.contract = new ethers.Contract('0xEB6bc10424Fd81854f2372eC9B26Ef39eA93b27c', abi, mnemonicWallet);
+        this.contract = new ethers.Contract('0x63384CCc277C574c75DB29dd24a60aE23d064b37', abi, mnemonicWallet);
         window.contract = this.contract;
     }
 
