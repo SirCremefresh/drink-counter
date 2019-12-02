@@ -1,8 +1,13 @@
 <script>
+    import {etherService} from './ether.service';
+
     export let showRoute;
+    let username = '';
 
     function register() {
-
+        if (username.length >= 0) {
+            etherService.register()
+        }
     }
 
 </script>
@@ -14,7 +19,7 @@
             <div class="field">
                 <label class="label">Username</label>
                 <div class="control has-icons-left has-icons-right">
-                    <input class="input" placeholder="bert" data-el="register-username-input" type="text">
+                    <input bind:value={username} class="input" placeholder="bert" data-el="register-username-input" type="text">
                     <span class="icon is-small is-left">
                     <i class="ion-md-person"></i>
                 </span>

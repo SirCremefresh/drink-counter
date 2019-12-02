@@ -5,6 +5,7 @@ const NODE_ENV = 'dev',
     INFURA_ROPSTEN_PROJECT_ID = 'b0699ff0c673456ea963164da0ab26dc',
     MNEMONIC = 'quit image fetch gap soul eight laptop neutral develop jar fold void';
 
+const uuid = require('uuid/v4');
 
 let provider, mnemonicWallet;
 // if (NODE_ENV === 'dev') {
@@ -220,6 +221,17 @@ class EtherService {
         console.log(contract)
     }
 
+    async register() {
+        const pwd = uuid();
+        await simpleCounter.register(
+            web3.utils.fromUtf8(username),
+            web3.utils.keccak256(pwd),
+            {from: process.env.PUBLIC_ADDRESS}
+        );
+        localStorage.setItem("USERNAME", `${username}`);
+        localStorage.setItem("PWD", `${pwd}`);
+        await showPage('SCAN');
+    }
 }
 
 
