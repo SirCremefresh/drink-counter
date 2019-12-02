@@ -1,12 +1,11 @@
 // import simpleCounterArtifact from "contracts-out/SimpleCounter.json";
 
+import uuid from "uuid/v4";
+
 const NODE_ENV = 'dev',
     HTTP_ENDPOINT = 'http://127.0.0.1:7545',
     INFURA_ROPSTEN_PROJECT_ID = 'b0699ff0c673456ea963164da0ab26dc',
     MNEMONIC = 'quit image fetch gap soul eight laptop neutral develop jar fold void';
-
-const uuid = require('uuid/v4');
-
 let provider, mnemonicWallet;
 // if (NODE_ENV === 'dev') {
 //     mnemonicWallet = ethers.Wallet.fromMnemonic(MNEMONIC);
@@ -207,26 +206,50 @@ let abi = [
     }
 ];
 
+// let text = "Hello World!"
+//
+// let bytes32 = ethers.utils.formatBytes32String(text)
+// // "0x48656c6c6f20576f726c64210000000000000000000000000000000000000000"
+//
+// let originalText = ethers.utils.parseBytes32String(bytes32)
+
 class EtherService {
 
-    async getUsers() {
-        mnemonicWallet = ethers.Wallet.fromMnemonic(MNEMONIC);
+    constructor() {
+        this.contract = null;
+
+    }
+
+
+    async initialize() {
+        if (this.contract !== null) return;
+
         const provider = new ethers.providers.InfuraProvider('ropsten', 'b0699ff0c673456ea963164da0ab26dc');
+        mnemonicWallet = ethers.Wallet.fromMnemonic(MNEMONIC).connect(provider);
 
+        this.contract = new ethers.Contract('0xEB6bc10424Fd81854f2372eC9B26Ef39eA93b27c', abi, mnemonicWallet);
+        window.contract = this.contract;
+    }
 
-        mnemonicWallet.connect(provider);
-        console.log(mnemonicWallet);
-        console.log(provider);
-        let contract = new ethers.Contract('0xEB6bc10424Fd81854f2372eC9B26Ef39eA93b27c', abi, provider);
-        console.log(contract)
+    async getUsers() {
+        const pwd1 = "pwd1";
+        let messageBytes = ethers.utils.toUtf8Bytes(pwd1);
+        const pwdHash1 = ethers.utils.keccak256(messageBytes);
+
+        console.log(pwdHash1);
     }
 
     async register(username) {
-        const pwd = uuid();
-        await simpleCounter.register(
-            web3.utils.fromUtf8(username),
-            web3.utils.keccak256(pwd),
-            {from: process.env.PUBLIC_ADDRESS}
+        await this.initialize();
+        const pwd = uuid().substring(0,31);
+
+        console.log(this.contract);
+
+        console.log(pwd);
+
+        await this.contract.register(
+            ethers.utils.formatBytes32String(username),
+            ethers.utils.keccak256(ethers.utils.formatBytes32String(pwd))
         );
         localStorage.setItem("USERNAME", `${username}`);
         localStorage.setItem("PWD", `${pwd}`);

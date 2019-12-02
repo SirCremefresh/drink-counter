@@ -7,7 +7,7 @@
     async function register() {
         if (username.length >= 0) {
             await etherService.register(username);
-            showRoute('SCAN');
+            showRoute('SCANNER');
         }
     }
 

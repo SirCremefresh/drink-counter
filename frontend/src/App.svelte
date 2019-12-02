@@ -7,7 +7,7 @@
     import Ranking from "./Ranking.svelte";
     import Layout from "./Layout.svelte";
 
-    let route = 'RANKING';
+    let route = 'REGISTER';
 
     const showRoute = (newRoute) => {
         console.log(`change route to ${newRoute}`);
