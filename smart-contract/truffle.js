@@ -23,5 +23,5 @@ module.exports = {
             network_id: 3
         }
     },
-    contracts_build_directory: path.join(__dirname, "./contracts-out"),
+    contracts_build_directory: path.join(__dirname, "../frontend/public/contracts-out"),
 };
