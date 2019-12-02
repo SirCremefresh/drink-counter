@@ -4,9 +4,10 @@
     export let showRoute;
     let username = '';
 
-    function register() {
+    async function register() {
         if (username.length >= 0) {
-            etherService.register()
+            await etherService.register(username);
+            showRoute('SCAN');
         }
     }
 

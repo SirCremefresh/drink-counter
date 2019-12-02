@@ -221,7 +221,7 @@ class EtherService {
         console.log(contract)
     }
 
-    async register() {
+    async register(username) {
         const pwd = uuid();
         await simpleCounter.register(
             web3.utils.fromUtf8(username),
@@ -230,7 +230,6 @@ class EtherService {
         );
         localStorage.setItem("USERNAME", `${username}`);
         localStorage.setItem("PWD", `${pwd}`);
-        await showPage('SCAN');
     }
 }
 
