@@ -52,12 +52,17 @@
 
     .tabs {
         display: grid;
+        position: absolute;
         grid-template-columns: 1fr 1fr;
 
 
         grid-area: tabs;
         background-color: #00d1b2;
+        height: 50px;
         margin: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
     }
 
     .trophy {
@@ -90,9 +95,5 @@
 
     .layout-title {
         margin-top: 10px;
-    }
-
-    .scroll-content {
-        overflow: scroll;
     }
 </style>
