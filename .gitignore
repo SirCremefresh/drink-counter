@@ -1,6 +1,7 @@
 .cache
 .idea
 .env
+.env.dev
 node_modules
 *.iml
 contracts-out
