@@ -68,7 +68,7 @@
 </script>
 
 <svelte:window bind:innerWidth={innerWidth}/>
-<h2 class="subtitle has-text-centered rainbow rainbow_text_animated">{height} / {innerWidth}</h2>
+<h2 class="subtitle has-text-centered rainbow rainbow_text_animated">Scan a QR-Code</h2>
 
 <main bind:clientHeight={height}>
     <canvas

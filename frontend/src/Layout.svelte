@@ -18,10 +18,10 @@
     </div>
     <div class="tabs">
         <div class="trophy" on:click={showRouteRanking}>
-            <i class="fas fa-trophy"></i>
+            <i class="ion-md-podium icon"></i>
         </div>
         <div class="qrcode" on:click={showRouteScanner}>
-            <i class="fas fa-qrcode"></i>
+            <i class="ion-md-qr-scanner icon"></i>
         </div>
     </div>
 </div>
@@ -66,7 +66,9 @@
         width: auto;
     }
 
-    .fa-trophy, .fa-qrcode {
+    .icon {
+        position: relative;
+        top: 5px;
         font-size: 40px;
     }
 
