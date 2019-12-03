@@ -4,6 +4,8 @@
     export let showRoute;
     let username = '';
 
+    etherService.initialize();
+
     async function register() {
         if (username.length >= 0) {
             await etherService.register(username);

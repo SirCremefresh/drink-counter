@@ -12,6 +12,9 @@ contract SimpleCounter {
         uint16 score;
     }
 
+    event UserRegistered(bytes32 username);
+    event UserIncremented(bytes32 username, uint16 score);
+
     modifier usernameExists(bytes32 username) {
         require(registeredUsers[username], "the username does not exist");
         _;
@@ -34,6 +37,7 @@ contract SimpleCounter {
         registeredUsers[username] = true;
         userPwdHash[username] = pwdHash;
         usernames.push(username);
+        emit UserRegistered(username);
     }
 
     function increment(
@@ -49,9 +53,10 @@ contract SimpleCounter {
     {
         require(barId < 7, "The barId is not valid");
         score[username][barId]++;
+        emit UserIncremented(username, userScore(username));
     }
 
-    function userScore(bytes32 username) usernameExists(username) view external returns (uint16) {
+    function userScore(bytes32 username) usernameExists(username) view public returns (uint16) {
         uint16[7] storage userScores = score[username];
         return userScores[0] + userScores[1] + userScores[2] + userScores[3] + userScores[4] + userScores[5] + userScores[6];
     }

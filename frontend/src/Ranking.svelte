@@ -12,7 +12,19 @@
     (async () => {
         ranking = await etherService.getRanking();
 
-        player = ranking.filter(r => r.username === localStorage.getItem('USERNAME'));
+        console.log(ranking);
+
+        const username = localStorage.getItem('USERNAME');
+        player = ranking.find(r => r.username === username);
+        if(player === undefined) {
+            player =  {
+                rank: '-',
+                username,
+                score: '-'
+            };
+        }
+
+        console.log(player);
 
         player.rank = ranking.indexOf(player) + 1;
         console.log(player);
@@ -32,7 +44,7 @@
         </thead>
         <tbody>
             <tr>
-                <th>{player.id}</th>
+                <th>{player.rank}</th>
                 <td>{player.username}</td>
                 <td>{player.score}</td>
             </tr>

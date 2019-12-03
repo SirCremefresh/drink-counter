@@ -2,7 +2,7 @@
     export let showRoute;
 
     import jsQR from "jsqr";
-    import uuid from "uuid/v4";
+    import {etherService} from './ether.service';
     import {onDestroy} from 'svelte';
 
 
@@ -49,15 +49,7 @@
             if (code) {
                 let barId = parseInt(code.data.substring(0, 1));
                 if (barId >= 0 && barId <= 6) {
-                    let newPwd = uuid();
-                    // simpleCounter.increment(
-                    //         web3.utils.fromUtf8(localStorage.getItem("USERNAME")),
-                    //         barId,
-                    //         web3.utils.fromUtf8(localStorage.getItem("PWD")),
-                    //         web3.utils.keccak256(newPwd),
-                    //         {from: process.env.PUBLIC_ADDRESS}
-                    // );
-                    // localStorage.setItem("PWD", `${newPwd}`);
+                    etherService.increment(barId);
                     stopCamera();
                     showRoute('RANKING');
                     return;

@@ -18,6 +18,38 @@ let provider, mnemonicWallet;
 
 let abi = [
     {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "bytes32",
+                "name": "username",
+                "type": "bytes32"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint16",
+                "name": "score",
+                "type": "uint16"
+            }
+        ],
+        "name": "UserIncremented",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "bytes32",
+                "name": "username",
+                "type": "bytes32"
+            }
+        ],
+        "name": "UserRegistered",
+        "type": "event"
+    },
+    {
         "constant": true,
         "inputs": [
             {
@@ -217,7 +249,6 @@ class EtherService {
 
     constructor() {
         this.contract = null;
-
     }
 
 
@@ -227,8 +258,15 @@ class EtherService {
         const provider = new ethers.providers.InfuraProvider('ropsten', 'b0699ff0c673456ea963164da0ab26dc');
         mnemonicWallet = ethers.Wallet.fromMnemonic(MNEMONIC).connect(provider);
 
-        this.contract = new ethers.Contract('0x63384CCc277C574c75DB29dd24a60aE23d064b37', abi, mnemonicWallet);
+        this.contract = new ethers.Contract('0xD4f4fFFe907aCFF4640df401De195F0e9c2aD9aD', abi, mnemonicWallet);
         window.contract = this.contract;
+
+        this.contract.on("UserRegistered", (oldValue, newValue, event) => {
+            console.log("UserRegistered", oldValue, newValue, event);
+        });
+        this.contract.on("UserIncremented", (oldValue, newValue, event) => {
+            console.log("UserIncremented", oldValue, newValue, event);
+        });
     }
 
     async getUsers() {
@@ -241,7 +279,7 @@ class EtherService {
 
     async register(username) {
         await this.initialize();
-        const pwd = uuid().substring(0,31);
+        const pwd = uuid().substring(0, 31);
 
         console.log(this.contract);
 
@@ -268,6 +306,22 @@ class EtherService {
 
         ranking.sort((x, y) => (x.score > y.score) ? 1 : -1);
         return ranking;
+    }
+
+    async increment(barId) {
+        const username = localStorage.getItem("USERNAME");
+        const pwd = localStorage.getItem("PWD");
+        const newPwd = uuid().substring(0, 31);
+        const newHash = ethers.utils.keccak256(ethers.utils.formatBytes32String(newPwd));
+
+        await this.contract.increment(
+            ethers.utils.formatBytes32String(username),
+            barId,
+            ethers.utils.formatBytes32String(pwd),
+            newHash
+        );
+
+        localStorage.setItem("PWD", `${newPwd}`);
     }
 }
 
