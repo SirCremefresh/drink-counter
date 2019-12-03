@@ -13,7 +13,7 @@
 
 <div class="container">
     <div class="layout-header">
-        <h1 class="title has-text-centered layout-title">DRINK COUNTER</h1>
+        <h1 class="title has-text-centered layout-title">DRINK COUNTER V5</h1>
     </div>
 
     <div class="app-content scroll-content">
@@ -54,6 +54,12 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
 
+        position: fixed;
+        bottom: calc(var(--vh, 1vh) * 100);
+        top: calc(var(--vh, 1vh) * 100 - 46px);
+        left: 0;
+        right: 0;
+        height: 64px;
 
         grid-area: tabs;
         background-color: #00d1b2;
