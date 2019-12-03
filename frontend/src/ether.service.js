@@ -16,6 +16,9 @@ let provider, mnemonicWallet;
 // const web3 = new Web3(provider);
 //
 
+const options = { gasLimit: 750000 };
+
+
 let abi = [
     {
         "anonymous": false,
@@ -255,20 +258,26 @@ class EtherService {
 
     async initialize() {
         if (this.contract !== null) return;
+        localStorage.setItem("USERS", JSON.stringify([]));
+
 
         // const provider = new ethers.providers.InfuraProvider('ropsten', 'b84d7d0e220a4f2aa32948882c0c8682');
         // const provider = new ethers.providers.InfuraProvider('ropsten', 'b0699ff0c673456ea963164da0ab26dc');
         const provider = new ethers.providers.InfuraProvider('ropsten', '3c73e78c751948a39868ad85c594747b');
         mnemonicWallet = ethers.Wallet.fromMnemonic(MNEMONIC).connect(provider);
 
-        this.contract = new ethers.Contract('0xD4f4fFFe907aCFF4640df401De195F0e9c2aD9aD', abi, mnemonicWallet);
+        this.contract = new ethers.Contract('0xd52BD602BE0b60fa53176ef203e92fA6fB7dE0fe', abi, mnemonicWallet);
         window.contract = this.contract;
+        window.provider = provider;
+        window.wallet = mnemonicWallet;
 
         const users = await this.getAllUsers();
         localStorage.setItem("USERS", JSON.stringify(users));
 
         this.contract.on("UserRegistered", (oldValue, newValue, event) => {
-            const username = ethers.utils.parseBytes32String(event.args.username);
+            console.log("UserRegistered", oldValue, newValue, event);
+
+            const username = ethers.utils.parseBytes32String(newValue.args.username);
 
             const users = JSON.parse(localStorage.getItem("USERS"));
 
@@ -278,10 +287,11 @@ class EtherService {
             });
 
             localStorage.setItem("USERS", JSON.stringify(users));
-
-            console.log("UserRegistered", oldValue, newValue, event);
+            this.notifySubscriber();
         });
         this.contract.on("UserIncremented", (oldValue, newValue, event) => {
+            console.log("UserIncremented", oldValue, newValue, event);
+
             const users = JSON.parse(localStorage.getItem("USERS"));
             const user = {
                 username: ethers.utils.parseBytes32String(event.args.username),
@@ -311,7 +321,8 @@ class EtherService {
 
         await this.contract.register(
             ethers.utils.formatBytes32String(username),
-            ethers.utils.keccak256(ethers.utils.formatBytes32String(pwd))
+            ethers.utils.keccak256(ethers.utils.formatBytes32String(pwd)),
+            options
         );
         localStorage.setItem("USERNAME", `${username}`);
         localStorage.setItem("PWD", `${pwd}`);
@@ -336,23 +347,35 @@ class EtherService {
         const newPwd = uuid().substring(0, 31);
         const newHash = ethers.utils.keccak256(ethers.utils.formatBytes32String(newPwd));
 
+        console.log(barId, username, pwd, newPwd, newHash);
+
         localStorage.setItem("INCREMENT_BUFFER", `${+localStorage.getItem("INCREMENT_BUFFER") + 1}`);
-        this.notifySubscriber();
-
-        try {
-            await this.contract.increment(
-                ethers.utils.formatBytes32String(username),
-                barId,
-                ethers.utils.formatBytes32String(pwd),
-                newHash
-            );
-        } catch (e) {
-            console.error(e);
-            localStorage.setItem("INCREMENT_BUFFER", `${+localStorage.getItem("INCREMENT_BUFFER") - 1}`);
-        }
-
         localStorage.setItem("PWD", `${newPwd}`);
+
         this.notifySubscriber();
+
+        setTimeout(async () => {
+            try {
+                await this.contract.increment(
+                    ethers.utils.formatBytes32String(username),
+                    barId,
+                    ethers.utils.formatBytes32String(pwd),
+                    newHash,
+                    options
+                );
+            } catch (e) {
+                if (e.code === "REPLACEMENT_UNDERPRICED") {
+                    console.log("Ignoring replacement error", e);
+                } else {
+                    console.error(e);
+                    localStorage.setItem("PWD", `${pwd}`);
+                    localStorage.setItem("INCREMENT_BUFFER", `${+localStorage.getItem("INCREMENT_BUFFER") - 1}`);
+                }
+            } finally {
+                this.notifySubscriber();
+            }
+        }, 100);
+
     }
 
     notifySubscriber() {
