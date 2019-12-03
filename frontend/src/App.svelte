@@ -7,7 +7,11 @@
     import Ranking from "./Ranking.svelte";
     import Layout from "./Layout.svelte";
 
-    let route = 'REGISTER';
+    const username = localStorage.getItem("USERNAME");
+
+    let route = (username) ? 'RANKING' : 'REGISTER';
+
+
 
     const showRoute = (newRoute) => {
         console.log(`change route to ${newRoute}`);

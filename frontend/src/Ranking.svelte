@@ -1,5 +1,7 @@
 <script>
     import {etherService} from './ether.service'
+    import {onDestroy} from 'svelte';
+
     export let showRoute;
 
     let ranking = [];
@@ -9,25 +11,34 @@
         score: 0
     };
 
+    etherService.getUsersData$(({user, users}) => {
+        player = user;
+        ranking = users;
+    });
+
+    onDestroy(() => {
+        etherService.subscriber = null;
+    });
+
     (async () => {
-        ranking = await etherService.getRanking();
-
-        console.log(ranking);
-
-        const username = localStorage.getItem('USERNAME');
-        player = ranking.find(r => r.username === username);
-        if(player === undefined) {
-            player =  {
-                rank: '-',
-                username,
-                score: '-'
-            };
-        }
-
-        console.log(player);
-
-        player.rank = ranking.indexOf(player) + 1;
-        console.log(player);
+        // ranking = await etherService.getRanking();
+        //
+        // console.log(ranking);
+        //
+        // const username = localStorage.getItem('USERNAME');
+        // player = ranking.find(r => r.username === username);
+        // if(player === undefined) {
+        //     player =  {
+        //         rank: '-',
+        //         username,
+        //         score: '-'
+        //     };
+        // }
+        //
+        // console.log(player);
+        //
+        // player.rank = ranking.indexOf(player) + 1;
+        // console.log(player);
     })();
 </script>
 
@@ -43,11 +54,11 @@
         </tr>
         </thead>
         <tbody>
-            <tr>
-                <th>{player.rank}</th>
-                <td>{player.username}</td>
-                <td>{player.score}</td>
-            </tr>
+        <tr>
+            <th>{player.rank}</th>
+            <td>{player.username}</td>
+            <td>{player.score}</td>
+        </tr>
         </tbody>
     </table>
 

@@ -249,32 +249,56 @@ class EtherService {
 
     constructor() {
         this.contract = null;
+        this.subscriber = null;
     }
 
 
     async initialize() {
         if (this.contract !== null) return;
 
-        const provider = new ethers.providers.InfuraProvider('ropsten', 'b0699ff0c673456ea963164da0ab26dc');
+        // const provider = new ethers.providers.InfuraProvider('ropsten', 'b84d7d0e220a4f2aa32948882c0c8682');
+        // const provider = new ethers.providers.InfuraProvider('ropsten', 'b0699ff0c673456ea963164da0ab26dc');
+        const provider = new ethers.providers.InfuraProvider('ropsten', '3c73e78c751948a39868ad85c594747b');
         mnemonicWallet = ethers.Wallet.fromMnemonic(MNEMONIC).connect(provider);
 
         this.contract = new ethers.Contract('0xD4f4fFFe907aCFF4640df401De195F0e9c2aD9aD', abi, mnemonicWallet);
         window.contract = this.contract;
 
+        const users = await this.getAllUsers();
+        localStorage.setItem("USERS", JSON.stringify(users));
+
         this.contract.on("UserRegistered", (oldValue, newValue, event) => {
+            const username = ethers.utils.parseBytes32String(event.args.username);
+
+            const users = JSON.parse(localStorage.getItem("USERS"));
+
+            users.push({
+                username,
+                score: 0
+            });
+
+            localStorage.setItem("USERS", JSON.stringify(users));
+
             console.log("UserRegistered", oldValue, newValue, event);
         });
         this.contract.on("UserIncremented", (oldValue, newValue, event) => {
-            console.log("UserIncremented", oldValue, newValue, event);
+            const users = JSON.parse(localStorage.getItem("USERS"));
+            const user = {
+                username: ethers.utils.parseBytes32String(event.args.username),
+                score: event.args.score
+            };
+
+            if (user.username === localStorage.getItem("USERNAME")) {
+                localStorage.setItem("INCREMENT_BUFFER", `${+localStorage.getItem("INCREMENT_BUFFER") - 1}`);
+            }
+
+            const savedUser = users.find(r => r.username === user.username);
+            savedUser.score = user.score;
+
+            localStorage.setItem("USERS", JSON.stringify(users));
+            console.log("UserIncremented", user);
+            this.notifySubscriber();
         });
-    }
-
-    async getUsers() {
-        const pwd1 = "pwd1";
-        let messageBytes = ethers.utils.toUtf8Bytes(pwd1);
-        const pwdHash1 = ethers.utils.keccak256(messageBytes);
-
-        console.log(pwdHash1);
     }
 
     async register(username) {
@@ -293,35 +317,81 @@ class EtherService {
         localStorage.setItem("PWD", `${pwd}`);
     }
 
-    async getRanking() {
+    async getAllUsers() {
+        await this.initialize();
         let ranking = await this.contract.getAllUsers();
 
-        ranking = ranking.map((user) => {
+        return ranking.map((user) => {
             return {
-                rank: 0,
                 username: ethers.utils.parseBytes32String(user.username),
                 score: user.score
             }
         });
-
-        ranking.sort((x, y) => (x.score > y.score) ? 1 : -1);
-        return ranking;
     }
 
     async increment(barId) {
+        await this.initialize();
         const username = localStorage.getItem("USERNAME");
         const pwd = localStorage.getItem("PWD");
         const newPwd = uuid().substring(0, 31);
         const newHash = ethers.utils.keccak256(ethers.utils.formatBytes32String(newPwd));
 
-        await this.contract.increment(
-            ethers.utils.formatBytes32String(username),
-            barId,
-            ethers.utils.formatBytes32String(pwd),
-            newHash
-        );
+        localStorage.setItem("INCREMENT_BUFFER", `${+localStorage.getItem("INCREMENT_BUFFER") + 1}`);
+        this.notifySubscriber();
+
+        try {
+            await this.contract.increment(
+                ethers.utils.formatBytes32String(username),
+                barId,
+                ethers.utils.formatBytes32String(pwd),
+                newHash
+            );
+        } catch (e) {
+            console.error(e);
+            localStorage.setItem("INCREMENT_BUFFER", `${+localStorage.getItem("INCREMENT_BUFFER") - 1}`);
+        }
 
         localStorage.setItem("PWD", `${newPwd}`);
+        this.notifySubscriber();
+    }
+
+    notifySubscriber() {
+        if (this.subscriber != null) {
+            this.subscriber();
+        }
+    }
+
+    getUsersData$(callback) {
+        this.subscriber = () => {
+            let users = JSON.parse(localStorage.getItem("USERS"));
+            let user = users.find(r => r.username === localStorage.getItem("USERNAME"));
+            if (user === undefined) {
+                user = {
+                    username: localStorage.getItem("USERNAME"),
+                    score: 0
+                };
+                users.push(user);
+            }
+            user.score += +localStorage.getItem("INCREMENT_BUFFER");
+
+            users.sort((x, y) => (x.score < y.score) ? 1 : -1);
+
+            users = users.map((u, index) => {
+                u.rank = index + 1;
+                return u;
+            });
+
+            console.log({
+                user,
+                users
+            });
+
+            callback({
+                user,
+                users
+            });
+        };
+        this.subscriber();
     }
 }
 
