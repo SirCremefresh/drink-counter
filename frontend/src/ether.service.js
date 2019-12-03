@@ -273,6 +273,8 @@ class EtherService {
         const users = await this.getAllUsers();
         localStorage.setItem("USERS", JSON.stringify(users));
 
+        this.notifySubscriber();
+
         this.contract.on("UserRegistered", (oldValue, newValue, event) => {
             console.log("UserRegistered", oldValue, newValue, event);
 

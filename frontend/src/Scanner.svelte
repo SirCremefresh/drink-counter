@@ -20,6 +20,10 @@
         }, 500);
     } else {
         const intervalId = setInterval(() => {
+            if (stopTick) {
+                clearInterval(intervalId);
+                return;
+            }
             countDown = Math.floor((nextScan - new Date().getTime()) / 1000);
             if (countDown <= 0) {
                 initializeCamera();

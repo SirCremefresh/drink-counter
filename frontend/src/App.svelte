@@ -6,12 +6,13 @@
     import Scanner from "./Scanner.svelte";
     import Ranking from "./Ranking.svelte";
     import Layout from "./Layout.svelte";
+    import {etherService} from './ether.service'
 
     const username = localStorage.getItem("USERNAME");
 
     let route = (username) ? 'RANKING' : 'REGISTER';
 
-
+    etherService.initialize();
 
     const showRoute = (newRoute) => {
         console.log(`change route to ${newRoute}`);
