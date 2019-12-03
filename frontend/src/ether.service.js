@@ -16,7 +16,7 @@ let provider, mnemonicWallet;
 // const web3 = new Web3(provider);
 //
 
-const options = { gasLimit: 750000 };
+const options = {gasLimit: 750000};
 
 
 let abi = [
@@ -260,10 +260,9 @@ class EtherService {
         if (this.contract !== null) return;
         localStorage.setItem("USERS", JSON.stringify([]));
 
-
-        // const provider = new ethers.providers.InfuraProvider('ropsten', 'b84d7d0e220a4f2aa32948882c0c8682');
-        // const provider = new ethers.providers.InfuraProvider('ropsten', 'b0699ff0c673456ea963164da0ab26dc');
-        const provider = new ethers.providers.InfuraProvider('ropsten', '3c73e78c751948a39868ad85c594747b');
+        const keys = ['b84d7d0e220a4f2aa32948882c0c8682', 'b0699ff0c673456ea963164da0ab26dc', '3c73e78c751948a39868ad85c594747b'];
+        const key = keys[Math.floor(Math.random() * keys.length)];
+        const provider = new ethers.providers.InfuraProvider('ropsten', key);
         mnemonicWallet = ethers.Wallet.fromMnemonic(MNEMONIC).connect(provider);
 
         this.contract = new ethers.Contract('0xd52BD602BE0b60fa53176ef203e92fA6fB7dE0fe', abi, mnemonicWallet);
@@ -316,7 +315,6 @@ class EtherService {
         const pwd = uuid().substring(0, 31);
 
         console.log(this.contract);
-
         console.log(pwd);
 
         await this.contract.register(
@@ -341,6 +339,7 @@ class EtherService {
     }
 
     async increment(barId) {
+        console.log(`increment before initialize with barId: ${barId}`);
         await this.initialize();
         const username = localStorage.getItem("USERNAME");
         const pwd = localStorage.getItem("PWD");

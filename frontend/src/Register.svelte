@@ -18,7 +18,7 @@
 <main>
     <div class="section">
         <div class="box">
-            <h1 class="title has-text-centered">Register</h1>
+            <h1 class="title has-text-centered">Register V2</h1>
             <div class="field">
                 <label class="label">Username</label>
                 <div class="control has-icons-left has-icons-right">
