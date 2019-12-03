@@ -324,8 +324,9 @@ class EtherService {
             ethers.utils.keccak256(ethers.utils.formatBytes32String(pwd)),
             options
         );
+
         localStorage.setItem("USERNAME", `${username}`);
-        localStorage.setItem("NEXT_SCAN", `${new Date().getTime() + 1*60000}`);
+        localStorage.setItem("NEXT_SCAN", `${new Date().getTime() + 1 * 60000}`);
         localStorage.setItem("PWD", `${pwd}`);
     }
 
@@ -352,7 +353,7 @@ class EtherService {
         console.log(barId, username, pwd, newPwd, newHash);
 
         localStorage.setItem("INCREMENT_BUFFER", `${+localStorage.getItem("INCREMENT_BUFFER") + 1}`);
-        localStorage.setItem("NEXT_SCAN", `${new Date().getTime() + 2*60000}`);
+        localStorage.setItem("NEXT_SCAN", `${new Date().getTime() + 2 * 60000}`);
         localStorage.setItem("PWD", `${newPwd}`);
 
         this.notifySubscriber();
@@ -418,6 +419,10 @@ class EtherService {
             });
         };
         this.subscriber();
+    }
+
+    async isUsernameTaken(username) {
+        return await this.contract.registeredUsers(ethers.utils.formatBytes32String(username))
     }
 }
 
