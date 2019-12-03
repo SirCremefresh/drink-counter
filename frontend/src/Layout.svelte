@@ -58,6 +58,7 @@
         bottom: calc(var(--vh, 1vh) * 100);
         top: calc(var(--vh, 1vh) * 100 - 46px);
         left: 0;
+        z-index: 100;
         right: 0;
         height: 64px;
 
