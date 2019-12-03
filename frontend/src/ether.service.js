@@ -323,6 +323,7 @@ class EtherService {
             options
         );
         localStorage.setItem("USERNAME", `${username}`);
+        localStorage.setItem("NEXT_SCAN", `${new Date().getTime() + 1*60000}`);
         localStorage.setItem("PWD", `${pwd}`);
     }
 
@@ -349,6 +350,7 @@ class EtherService {
         console.log(barId, username, pwd, newPwd, newHash);
 
         localStorage.setItem("INCREMENT_BUFFER", `${+localStorage.getItem("INCREMENT_BUFFER") + 1}`);
+        localStorage.setItem("NEXT_SCAN", `${new Date().getTime() + 2*60000}`);
         localStorage.setItem("PWD", `${newPwd}`);
 
         this.notifySubscriber();

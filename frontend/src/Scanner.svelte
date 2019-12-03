@@ -7,29 +7,44 @@
 
 
     let canvas, ctx, innerWidth, height, stopTick = false;
+    let countDown = '';
 
     const video = document.createElement('video');
 
-    setTimeout(() => {
-        console.log({innerWidth, height});
+    const nextScan = +localStorage.getItem("NEXT_SCAN");
+    const canScan = new Date().getTime() >= nextScan;
 
-        navigator.mediaDevices.getUserMedia({
+    if (canScan) {
+        setTimeout(() => {
+            initializeCamera();
+        }, 500);
+    } else {
+        const intervalId = setInterval(() => {
+            countDown = Math.floor((nextScan - new Date().getTime()) / 1000);
+            if (countDown <= 0) {
+                initializeCamera();
+                clearInterval(intervalId);
+            }
+        }, 500);
+    }
+
+    async function initializeCamera() {
+        const stream = await navigator.mediaDevices.getUserMedia({
             video: {
                 width: innerWidth,
                 height: height,
                 facingMode: "environment"
             }
-        }).then(function (stream) {
-            if (stopTick) return;
-            ctx = canvas.getContext("2d");
-
-            video.srcObject = stream;
-            video.setAttribute("playsinline", 'true'); // required to tell iOS safari we don't want fullscreen
-            video.play();
-            requestAnimationFrame(tick);
         });
-    }, 1000);
 
+        if (stopTick) return;
+        ctx = canvas.getContext("2d");
+
+        video.srcObject = stream;
+        video.setAttribute("playsinline", 'true'); // required to tell iOS safari we don't want fullscreen
+        video.play();
+        requestAnimationFrame(tick);
+    }
 
     function tick() {
         if (stopTick) return;
@@ -83,11 +98,18 @@
             id="canvas" class="canvas"
             hidden
     ></canvas>
+    <div class="countdown">{countDown}</div>
 </main>
 <style>
     main {
         height: calc(100% - 25px);
         background: black;
+    }
+
+    .countdown {
+        color: white;
+        text-align: center;
+        font-size: 100px;
     }
 
     .subtitle {
