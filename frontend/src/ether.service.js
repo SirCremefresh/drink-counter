@@ -254,6 +254,21 @@ class EtherService {
         localStorage.setItem("USERNAME", `${username}`);
         localStorage.setItem("PWD", `${pwd}`);
     }
+
+    async getRanking() {
+        let ranking = await this.contract.getAllUsers();
+
+        ranking = ranking.map((user) => {
+            return {
+                rank: 0,
+                username: ethers.utils.parseBytes32String(user.username),
+                score: user.score
+            }
+        });
+
+        ranking.sort((x, y) => (x.score > y.score) ? 1 : -1);
+        return ranking;
+    }
 }
 
 

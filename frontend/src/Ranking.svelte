@@ -2,11 +2,21 @@
     import {etherService} from './ether.service'
     export let showRoute;
 
-    etherService.getUsers();
+    let ranking = [];
+    let player = {
+        rank: 0,
+        username: '',
+        score: 0
+    };
 
+    (async () => {
+        ranking = await etherService.getRanking();
 
-    let ranking = [{name: "hans", drinks: 5}, {name: "don", drinks: 3}, {name: "globi", drinks: 1},{name: "hans", drinks: 5}, {name: "don", drinks: 3}, {name: "globi", drinks: 1},{name: "hans", drinks: 5}, {name: "don", drinks: 3}, {name: "globi", drinks: 1},{name: "hans", drinks: 5}, {name: "don", drinks: 3}, {name: "globi", drinks: 1},{name: "hans", drinks: 5}, {name: "don", drinks: 3}, {name: "globi", drinks: 1},{name: "hans", drinks: 5}, {name: "don", drinks: 3}, {name: "globi", drinks: 1},{name: "hans", drinks: 5}, {name: "don", drinks: 3}, {name: "globi", drinks: 1},{name: "hans", drinks: 5}, {name: "don", drinks: 3}, {name: "globi", drinks: 1},{name: "hans", drinks: 5}, {name: "don", drinks: 3}, {name: "globi", drinks: 1},{name: "hans", drinks: 5}, {name: "don", drinks: 3}, {name: "globi", drinks: 1}];
-    let player = {name: "you", rank:"2alcoholic"};
+        player = ranking.filter(r => r.username === localStorage.getItem('USERNAME'));
+
+        player.rank = ranking.indexOf(player) + 1;
+        console.log(player);
+    })();
 </script>
 
 <main>
@@ -22,9 +32,9 @@
         </thead>
         <tbody>
             <tr>
-                <th>{999}</th>
-                <td>{player.name}</td>
-                <td>{player.rank}</td>
+                <th>{player.id}</th>
+                <td>{player.username}</td>
+                <td>{player.score}</td>
             </tr>
         </tbody>
     </table>
@@ -42,8 +52,8 @@
         {#each ranking as rank, i}
             <tr>
                 <th>{i + 1}</th>
-                <td>{rank.name}</td>
-                <td>{rank.drinks}</td>
+                <td>{rank.username}</td>
+                <td>{rank.score}</td>
             </tr>
         {/each}
         </tbody>
