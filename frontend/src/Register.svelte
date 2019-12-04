@@ -5,8 +5,6 @@
     let username = '';
     let errorMessage = '';
 
-    etherService.initialize();
-
     async function register() {
         if (username.length < 3) {
             errorMessage = 'The Username needs to be at least 3 characters';
