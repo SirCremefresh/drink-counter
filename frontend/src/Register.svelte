@@ -23,6 +23,7 @@
 
         errorMessage= '';
         await etherService.register(username);
+        showRoute("RANKING");
     }
 
 </script>
@@ -30,7 +31,7 @@
 <main>
     <div class="section">
         <div class="box">
-            <h1 class="title has-text-centered">Register V4</h1>
+            <h1 class="title has-text-centered">Register</h1>
             <div class="field">
                 <label class="label">Username</label>
                 <div class="control has-icons-left has-icons-right">

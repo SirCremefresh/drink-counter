@@ -13,7 +13,7 @@
 
 <div class="container">
     <div class="layout-header">
-        <h1 class="title has-text-centered layout-title">DRINK COUNTER V4</h1>
+        <h1 class="title has-text-centered layout-title">DRINK COUNTER</h1>
     </div>
 
     <div class="app-content scroll-content">
