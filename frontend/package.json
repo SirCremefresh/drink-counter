@@ -20,7 +20,7 @@
     "@fortawesome/fontawesome-free": "^5.11.2",
     "bulma": "^0.8.0",
     "jsqr": "^1.2.0",
-    "rollup-plugin-postcss": "^2.0.3",
+    "rollup-plugin-postcss": "^4.0.2",
     "sirv-cli": "^0.4.4",
     "uuid": "^3.3.3",
     "web3": "^1.2.4"
